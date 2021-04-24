@@ -4,6 +4,8 @@
 #include <vector>
 
 
+
+
 using namespace std;
 
 
@@ -30,3 +32,31 @@ void ShowConsoleCursor(bool showFlag)
 }
 
 
+void showInfo(string info){
+	gotoxy(0,0);
+	cout<<"                                                        ";
+	gotoxy(0,0);
+	cout<<info;
+	
+}
+	void showInfo(char info){
+		gotoxy(0,0);
+		cout<<"                                                        ";
+		gotoxy(0,0);
+		cout<<info;
+		
+	}
+	void showInfo(int info){
+		gotoxy(0,0);
+		cout<<"                                                        ";
+		gotoxy(0,0);
+		cout<<info;
+		
+	}
+	void showInfo(float info){
+		gotoxy(0,0);
+		cout<<"                                                        ";
+		gotoxy(0,0);
+		cout<<info;
+		
+	}
