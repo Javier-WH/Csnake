@@ -4,87 +4,48 @@
 #include <vector>
 #include <cwchar>
 #include "Csnake.h"
-
+#include "MakeMenu.h"
 
 using namespace std;
 
+int LEVEL = 0;
+bool GAME_OVER = false; 
+
+void playLevel(int);
 
 int main(int argc, char *argv[]) {
-	system("cls");
-	snakeBody.push_back({50,20});
 	HWND hWnd = GetConsoleWindow();
 	ShowWindow(hWnd,SW_SHOWMAXIMIZED);
-	char direction = r;
-	char auxDirection = direction;
-	int speed = 90;
-	int initialSize = 4;
-	int scoreLostPerloop = 1;
-	int score ;
-	int foodTimer = 500;
-	int eatenFood = 0;
-	snakeBody.resize(initialSize,{0,0});
-	drawMap();
-	spawnFood();
+	
+	MakeMenu mainMenu = MakeMenu(width, height, {"Nuevo Juego", "Continuar", "Salir"});
+	mainMenu.title = "Csnake";
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), backgroundColor);
-	gotoxy(_width +5 , _height-1);
-	cout<<"Csnake   Level: 1   Eaten Food: "<<eatenFood;
-	gotoxy(width -15 , _height-1);
-	cout<<"Score: 0 ";
-	
-	while(direction != 27){
-		if(scoreLostPerloop < 100){
-			scoreLostPerloop++;
-		}
-		
-		if(kbhit()){
-			getch();//corrige un bug
-			direction = getch();
-		}
-		
-		if(direction == u || direction == d || direction == l ||direction == r){
-			moveSnake(direction);
-			auxDirection = direction;
-		}
-		else{
-			moveSnake(auxDirection);
-		}
-		
-		
-		if(checkColition()){
-			break;
-		}
-		
-		
-		if(ateFood()){
-			eatenFood++;
-			spawnFood();
-			grow(2);
-			speed--;
-			score = ((snakeBody.size()-initialSize) * 100)-scoreLostPerloop;
-			gotoxy(width-15 , _height-1);
-			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), backgroundColor);
-			cout<<"Score: "<<score;
-			gotoxy(_width +5 , _height-1);
-			cout<<"Csnake   Level: 1   Eaten Food: "<<eatenFood;
-			scoreLostPerloop = 1;
-		}
-		
-		if(foodTimer == 0){
-			foodTimer = 500;
-			gotoxy(foodCoord);
-			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), backgroundColor);
-			cout<<snakeSegment;
-			spawnFood();
-		}
-		foodTimer--;
-		Sleep(speed);
-	}
-	
+	int opc;
 
 	
-	gotoxy(((_width + width)/2)-4 , (_height + height)/2);
-	cout<<"GAME OVER";
-	Sleep(3000);
+	while(1){
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), backgroundColor);
+		opc = mainMenu.drawMenu();
+		if(opc == 1){
+			LEVEL = 1;
+			playLevel(1);
+			
+		}else if(opc == 2){
+			playLevel(LEVEL);
+			
+		}else if(opc == 3){
+			
+			gotoxy(((_width + width)/2)-4 , (_height + height)/2);
+			cout<<"Hasta luego...";
+			Sleep(3000);
+			break;
+			
+		}
+		
+	
+		
+	}//main bucle
+	
 	
 	gotoxy(width+5, height+5);
 	
@@ -92,5 +53,47 @@ int main(int argc, char *argv[]) {
 	return 0;
 }
 
+
+
+void playLevel(int level){
+	GAME_OVER = false;
+	switch(level){
+		case 0:
+			gotoxy(((_width + width)/2)-4 , (_height + height)/2);
+			cout<<"Debes iniciar una partida primero";
+			GAME_OVER = true;
+			Sleep(2000);
+		break;
+		
+		case 1:
+			if (level_1()){
+				LEVEL = 2;
+			}
+			else{
+				GAME_OVER = true;
+			}
+		break;
+		case 2:
+			if (level_2()){
+				LEVEL = 3;
+			}
+			else{
+				GAME_OVER = true;
+			}
+		break;
+		case 3:
+			gotoxy(((_width + width)/2)-4 , (_height + height)/2);
+			cout<<"Level 3, comming soon";
+			GAME_OVER = true;
+			Sleep(3000);
+		break;
+		
+	}//
+	
+	if(!GAME_OVER){
+		playLevel(LEVEL);
+	}
+	
+}
 
 

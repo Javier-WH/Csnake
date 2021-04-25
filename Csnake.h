@@ -27,13 +27,14 @@ vector<COORD> snakeBody;
 string snakeSegment = "  ";
 string foodSegment = "  ";
 int snakeColor = 168;//168 by default
+int snakeTailColor = 14;
 int backgroundColor = 14;
 int foodColor = 70;
 int borderColor = 2;
 COORD foodCoord;
 int width = 100;
 int height = 40;
-int _width = 10;
+int _width = 1;
 int _height = 1;
 char prevDirection;
 bool UP = false;
@@ -164,7 +165,7 @@ void moveSnake(char direction){
 	}
 	
 	//erase tail
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), backgroundColor);
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), snakeTailColor);
 	gotoxy(snakeBody.back());
 	cout<<snakeSegment;
 	
@@ -247,7 +248,7 @@ void spawnFood(){
 	foodCoord.X = rand()%width;
 	foodCoord.Y = rand()%height;
 	
-	for(int i = 0 ; i < snakeBody.size(); i++){
+	for(int i = 0 ; i < (signed) snakeBody.size(); i++){
 		if(snakeBody[i].X == foodCoord.X && snakeBody[i].Y == foodCoord.Y){
 			foodCoord.X = rand()%width;
 			foodCoord.Y = rand()%height;
@@ -256,10 +257,10 @@ void spawnFood(){
 	
 	
 	
-	if(foodCoord.X < _width){
+	if(foodCoord.X <= _width){
 		foodCoord.X = _width + 3;
 	}
-	if(foodCoord.Y < _height){
+	if(foodCoord.Y <= _height){
 		foodCoord.Y = _height +3;
 	}
 	
@@ -278,7 +279,7 @@ bool ateFood(){
 	if((snakeBody[0].Y == foodCoord.Y && snakeBody[0].X == foodCoord.X) || (snakeBody[0].X == (foodCoord.X+1) &&  snakeBody[0].Y == foodCoord.Y ) || (snakeBody[0].X == (foodCoord.X-1) &&  snakeBody[0].Y == foodCoord.Y ) ){
 		
 		gotoxy(foodCoord);
-		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), backgroundColor);
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), snakeTailColor);
 		cout<<snakeSegment;
 		
 		return true;
@@ -288,8 +289,210 @@ bool ateFood(){
 	
 	return false;
 }
+		
+	void setMapColor(int color){
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
+		for (int i = _height ; i <= height ; i++){
+			for (int j = _width ; j <= width; j++){
+				gotoxy(j,i);
+				cout<<" ";
+			}
+		}
+
+	}
+	
+	
+	
+//////////////////////////////////////Levels///////////////////////////////////////////////////////////
+	
+	
+	int level_1(){
+		
+		snakeColor = 168;//168 by default
+		backgroundColor = 14;
+		foodColor = 70;
+		borderColor = 2;
+		snakeTailColor = 14;
+		
+		
+		
+		
+		system("cls");
+		setMapColor(snakeTailColor);
+		int levelScoreCap = 1000;
+		char direction = r;
+		char auxDirection = direction;
+		int speed = 90;
+		int initialSize = 4;
+		int scoreLostPerloop = 1;
+		int score ;
+		int foodTimer = 500;
+		int eatenFood = 0;
+		snakeBody.resize(0);
+		snakeBody.push_back({50,20});
+		snakeBody.resize(initialSize,{0,0});
+		drawMap();
+		spawnFood();
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), backgroundColor);
+		gotoxy(_width +5 , _height-1);
+		cout<<"Csnake   Level: 1   Eaten Food: "<<eatenFood;
+		gotoxy(width -15 , _height-1);
+		cout<<"Score: 0 ";
+		
+		while(direction != 27){
+			if(scoreLostPerloop < 100){
+				scoreLostPerloop++;
+			}
+			
+			if(kbhit()){
+				getch();//corrige un bug
+				direction = getch();
+			}
+			
+			if(direction == u || direction == d || direction == l ||direction == r){
+				moveSnake(direction);
+				auxDirection = direction;
+			}
+			else{
+				moveSnake(auxDirection);
+			}
 			
 			
+			if(checkColition()){
+				return 0;
+			}
+			
+			
+			if(ateFood()){
+				foodTimer = 500;
+				eatenFood++;
+				spawnFood();
+				grow(2);
+				speed--;
+				score = ((snakeBody.size()-initialSize) * 100)-scoreLostPerloop;
+				gotoxy(width-15 , _height-1);
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), backgroundColor);
+				cout<<"Score: "<<score;
+				gotoxy(_width +5 , _height-1);
+				cout<<"Csnake   Level: 1   Eaten Food: "<<eatenFood;
+				scoreLostPerloop = 1;
+				
+				if (score >= levelScoreCap){
+					return 1;
+				}
+				
+			}
+			
+			if(foodTimer == 0){
+				foodTimer = 500;
+				gotoxy(foodCoord);
+				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), backgroundColor);
+				cout<<snakeSegment;
+				spawnFood();
+			}
+			foodTimer--;
+			Sleep(speed);
+		}
+		
+		
+		
+		
+		return 1;
+	}
+
+		
+		
+		int level_2(){
+			
+			
+			snakeColor = 190;
+			backgroundColor = 14;
+			foodColor = 90;
+			borderColor = 9;
+			snakeTailColor = 14;
+			
+			system("cls");
+			setMapColor(snakeTailColor);
+			int levelScoreCap = 1000;
+			char direction = r;
+			char auxDirection = direction;
+			int speed = 80;
+			int initialSize = 4;
+			int scoreLostPerloop = 1;
+			int score ;
+			int foodTimer = 500;
+			int eatenFood = 0;
+			snakeBody.resize(0);
+			snakeBody.push_back({50,20});
+			snakeBody.resize(initialSize,{0,0});
+			drawMap();
+			spawnFood();
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), backgroundColor);
+			gotoxy(_width +5 , _height-1);
+			cout<<"Csnake   Level: 2   Eaten Food: "<<eatenFood;
+			gotoxy(width -15 , _height-1);
+			cout<<"Score: 0 ";
+			
+			while(direction != 27){
+				if(scoreLostPerloop < 100){
+					scoreLostPerloop++;
+				}
+				
+				if(kbhit()){
+					getch();//corrige un bug
+					direction = getch();
+				}
+				
+				if(direction == u || direction == d || direction == l ||direction == r){
+					moveSnake(direction);
+					auxDirection = direction;
+				}
+				else{
+					moveSnake(auxDirection);
+				}
+				
+				
+				if(checkColition()){
+					return 0;
+				}
+				
+				
+				if(ateFood()){
+					foodTimer = 500;
+					eatenFood++;
+					spawnFood();
+					grow(2);
+					speed--;
+					score = ((snakeBody.size()-initialSize) * 100)-scoreLostPerloop;
+					gotoxy(width-15 , _height-1);
+					SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), backgroundColor);
+					cout<<"Score: "<<score;
+					gotoxy(_width +5 , _height-1);
+					cout<<"Csnake   Level: 2   Eaten Food: "<<eatenFood;
+					scoreLostPerloop = 1;
+					
+					if (score >= levelScoreCap){
+						return 1;
+					}
+					
+				}
+				
+				if(foodTimer == 0){
+					foodTimer = 500;
+					gotoxy(foodCoord);
+					SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), backgroundColor);
+					cout<<snakeSegment;
+					spawnFood();
+				}
+				foodTimer--;
+				Sleep(speed);
+			}
+			
+			
+			
+			
+			return 1;
+		}
 			
 			
 			
