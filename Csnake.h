@@ -319,7 +319,7 @@ bool ateFood(){
 		
 		system("cls");
 		setMapColor(snakeTailColor);
-		int levelScoreCap = 1000;
+		int levelScoreCap = 10000;
 		char direction = r;
 		char auxDirection = direction;
 		int speed = 90;
@@ -413,7 +413,7 @@ bool ateFood(){
 			
 			system("cls");
 			setMapColor(snakeTailColor);
-			int levelScoreCap = 1000;
+			int levelScoreCap = 13000;
 			char direction = r;
 			char auxDirection = direction;
 			int speed = 80;

@@ -93,6 +93,12 @@ void playLevel(int level){
 	if(!GAME_OVER){
 		playLevel(LEVEL);
 	}
+	else{
+		gotoxy(((_width + width)/2)-4 , (_height + height)/2);
+		cout<<"GAME OVER";
+		GAME_OVER = true;
+		Sleep(3000);
+	}
 	
 }
 
