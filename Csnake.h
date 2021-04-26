@@ -461,7 +461,7 @@ bool ateFood(){
 		int speed = 100;
 		int initialSize = 4;
 		int scoreLostPerloop = 1;
-		int score ;
+		int score = 0 ;
 		int foodTimer = 500;
 		int eatenFood = 0;
 		snakeBody.resize(0);
@@ -474,10 +474,18 @@ bool ateFood(){
 		cout<<"Csnake   Level: "<<nLevel<<"   Eaten Food: "<<eatenFood;
 		gotoxy(width -15 , _height-1);
 		cout<<"Score: 0 ";
+		int porcent20 = (levelScoreCap*20)/100;
+		int colorScore = levelScoreCap - porcent20;
 		
 		putObstacle(obstacleType);
 		
 		while(true){
+			
+			if(score > colorScore){
+				snakeColor = rand()%100 +20;
+				
+			}
+			
 			if(scoreLostPerloop < 100){
 				scoreLostPerloop++;
 			}

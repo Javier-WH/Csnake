@@ -24,7 +24,7 @@ int main(int argc, char *argv[]) {
 		opc = mainMenu.drawMenu();
 		if(opc == 1){
 			LEVEL = 1;
-			playLevel(90);
+			playLevel(1);
 			
 		}else if(opc == 2){
 			playLevel(LEVEL);
@@ -93,7 +93,7 @@ void playLevel(int level){
 		
 		case 1:
 			hadGame = true;
-			if (makeLevel(1, 168, 70, 2, 14, 10000, 0, {50,20})){
+			if (makeLevel(1, 168, 70, 2, 14, 12000, 0, {50,20})){
 				LEVEL = 2;
 			}
 			else{
@@ -140,7 +140,7 @@ void playLevel(int level){
 			break;
 		case 6:
 			hadGame = true;
-			if (makeLevel(6, 10, 168, 112, 112, 18000, 5, {30,10})){
+			if (makeLevel(6, 150, 360, 1, 13, 18000, 5, {30,10})){
 			LEVEL = 1;
 			}
 			else{
