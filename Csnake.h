@@ -21,6 +21,7 @@
 
 using namespace std;
 
+bool LEVEL_CHANGER = false;
 
 vector<COORD> obstacle;
 vector<COORD> snakeBody;
@@ -66,35 +67,7 @@ void ShowConsoleCursor(bool showFlag)
 }
 
 
-void showInfo(string info){
-	gotoxy(0,0);
-	cout<<"                                                        ";
-	gotoxy(0,0);
-	cout<<info;
-	
-}
-void showInfo(char info){
-	gotoxy(0,0);
-	cout<<"                                                        ";
-	gotoxy(0,0);
-	cout<<info;
-	
-}
-void showInfo(int info){
-	gotoxy(0,0);
-	cout<<"                                                        ";
-	gotoxy(0,0);
-	cout<<info;
-	
-}
-void showInfo(float info){
-	gotoxy(0,0);
-	cout<<"                                                        ";
-	gotoxy(0,0);
-	cout<<info;
-	
-}
-	
+
 	
 void moveSnake(char direction){
 	ShowConsoleCursor(false);
@@ -257,12 +230,18 @@ void spawnFood(){
 	foodCoord.Y = rand()%height;
 	
 	for(int i = 0 ; i < (signed) snakeBody.size(); i++){
-		if(snakeBody[i].X == foodCoord.X && snakeBody[i].Y == foodCoord.Y){
+		if((snakeBody[i].X == foodCoord.X || snakeBody[i].X+1 == foodCoord.X) && snakeBody[i].Y == foodCoord.Y){
 			foodCoord.X = rand()%width;
 			foodCoord.Y = rand()%height;
 		}
 	}
 	
+	for(int i = 0 ; i < (signed) obstacle.size(); i++){
+		if(obstacle[i].X == foodCoord.X && obstacle[i].Y == foodCoord.Y){
+			foodCoord.X = rand()%width;
+			foodCoord.Y = rand()%height;
+		}
+	}
 	
 	
 	if(foodCoord.X <= _width){
@@ -342,7 +321,7 @@ bool ateFood(){
 		}
 		
 		else if(type == 3){
-			int obsSize = 80;
+			int obsSize = 100;
 			obstacle.resize(obsSize);
 			short Ypos = 11;
 			short Xpos = 25;
@@ -356,7 +335,7 @@ bool ateFood(){
 				
 			}
 			
-			for (int i = 10 ; i < 60 ; i++){
+			for (int i = 21 ; i < 71 ; i++){
 				obstacle[i] = {Xpos++, 20};
 				gotoxy(obstacle[i]);
 				cout<<(char)BH;
@@ -368,7 +347,7 @@ bool ateFood(){
 		
 	
 		else if(type == 4){
-			int obsSize = 80;
+			int obsSize = 100;
 			obstacle.resize(obsSize);
 			short Ypos = 20;
 			short Xpos1 = 1;
@@ -422,7 +401,7 @@ bool ateFood(){
 			}
 			
 			for (int i = 81 ; i < 95 ; i++){
-				obstacle[i] = {50, Ypos++};////////////////////////////////////////////////
+				obstacle[i] = {50, Ypos++};
 				gotoxy(obstacle[i]);
 				cout<<(char)BV;
 				
@@ -479,7 +458,7 @@ bool ateFood(){
 		int levelScoreCap = _scoreCap;
 		char direction = r;
 		char auxDirection = direction;
-		int speed = 80;
+		int speed = 100;
 		int initialSize = 4;
 		int scoreLostPerloop = 1;
 		int score ;
@@ -498,14 +477,15 @@ bool ateFood(){
 		
 		putObstacle(obstacleType);
 		
-		while(direction != 27){
+		while(true){
 			if(scoreLostPerloop < 100){
 				scoreLostPerloop++;
 			}
 			
 			if(kbhit()){
-				getch();//corrige un bug
-				direction = getch();
+				if(getch() == 224){
+					direction = getch();
+				}
 			}
 			
 			if(direction == u || direction == d || direction == l ||direction == r){
@@ -514,6 +494,9 @@ bool ateFood(){
 			}
 			else{
 				moveSnake(auxDirection);
+				if(direction == 81 && LEVEL_CHANGER){
+					break;
+				}
 			}
 			
 			
@@ -527,7 +510,9 @@ bool ateFood(){
 				eatenFood++;
 				spawnFood();
 				grow(2);
-				speed--;
+				if(speed >50){
+					speed--;	
+				}
 				score = ((snakeBody.size()-initialSize) * 100)-scoreLostPerloop;
 				gotoxy(width-15 , _height-1);
 				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), backgroundColor);
@@ -552,15 +537,6 @@ bool ateFood(){
 			foodTimer--;
 			Sleep(speed);
 		}
-		
-		
-		
-		
 		return 1;
 	}
-		
-		
-		
-		
 
-			
