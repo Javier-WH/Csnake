@@ -22,7 +22,7 @@
 using namespace std;
 
 
-
+vector<COORD> obstacle;
 vector<COORD> snakeBody;
 string snakeSegment = "  ";
 string foodSegment = "  ";
@@ -181,13 +181,21 @@ bool checkColition(){
 		return true;
 	}
 	
-	for(int i = 3 ; i < (signed) snakeBody.size(); i++){
+	for(int i = 4 ; i < (signed) snakeBody.size(); i++){
 		
 		if(snakeBody[0].X == snakeBody[i].X && snakeBody[0].Y == snakeBody[i].Y){
 			return true;
 		}
 		
 	}
+	
+	for(int i = 0 ; i < (signed) obstacle.size(); i++){
+		if(snakeBody[0].X == obstacle[i].X && snakeBody[0].Y == obstacle[i].Y){
+			return true;
+		}
+		
+	}
+	
 	
 	
 	return false;
@@ -298,46 +306,197 @@ bool ateFood(){
 				cout<<" ";
 			}
 		}
+	}
+	
+	
+	void putObstacle(int type){
+		obstacle.resize(0);
+		
+		if(type == 1){
+			int obsSize = width/3;
+			obstacle.resize(obsSize);
+			short Xpos = 33;
+			
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), borderColor);
+			
+			for (int i = 0 ; i < (signed) obstacle.size() ; i++){
+				obstacle[i] = {Xpos++, 20};
+				gotoxy(obstacle[i]);
+				cout<<(char)BH;
+			}
+		}
+		
+		else if(type == 2){
+			int obsSize = 20;
+			obstacle.resize(obsSize);
+			short Ypos = 10;
+			
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), borderColor);
+			
+			for (int i = 0 ; i < (signed) obstacle.size() ; i++){
+				obstacle[i] = {50, Ypos++};
+				gotoxy(obstacle[i]);
+				cout<<(char)BV;
 
+			}
+		}
+		
+		else if(type == 3){
+			int obsSize = 80;
+			obstacle.resize(obsSize);
+			short Ypos = 11;
+			short Xpos = 25;
+			
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), borderColor);
+			
+			for (int i = 0 ; i < 20 ; i++){
+				obstacle[i] = {50, Ypos++};
+				gotoxy(obstacle[i]);
+				cout<<(char)BV;
+				
+			}
+			
+			for (int i = 10 ; i < 60 ; i++){
+				obstacle[i] = {Xpos++, 20};
+				gotoxy(obstacle[i]);
+				cout<<(char)BH;
+			}
+			
+			gotoxy(50, 20);
+			cout<<(char)206;
+		}
+		
+	
+		else if(type == 4){
+			int obsSize = 80;
+			obstacle.resize(obsSize);
+			short Ypos = 20;
+			short Xpos1 = 1;
+			short Xpos2 = 100;
+			
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), borderColor);
+			
+			for (int i = 0 ; i < 40 ; i++){
+				obstacle[i] = {Xpos1++, Ypos};
+				gotoxy(obstacle[i]);
+				cout<<(char)BH;
+				
+			}
+			
+			for (int i = 80 ; i > 40 ; i--){
+				obstacle[i] = {Xpos2--, Ypos};
+				gotoxy(obstacle[i]);
+				cout<<(char)BH;
+				
+			}
+			
+			
+			gotoxy(1, 20);
+			cout<<(char)204;
+			gotoxy(100, 20);
+			cout<<(char)185;
+		}
+		
+		else if(type == 5){
+			int obsSize = 111;
+			obstacle.resize(obsSize);
+			short Ypos = 1;
+			short Ypos2 = 40;
+			short Xpos1 = 1;
+			short Xpos2 = 100;
+			
+			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), borderColor);
+			
+			for (int i = 0 ; i < 40 ; i++){
+				obstacle[i] = {Xpos1++, 20};
+				gotoxy(obstacle[i]);
+				cout<<(char)BH;
+				
+			}
+			
+			for (int i = 80 ; i > 40 ; i--){
+				obstacle[i] = {Xpos2--, 20};
+				gotoxy(obstacle[i]);
+				cout<<(char)BH;
+				
+			}
+			
+			for (int i = 81 ; i < 95 ; i++){
+				obstacle[i] = {50, Ypos++};////////////////////////////////////////////////
+				gotoxy(obstacle[i]);
+				cout<<(char)BV;
+				
+			}
+			
+			for (int i = 110 ; i > 96 ; i--){
+				obstacle[i] = {50, Ypos2--};
+				gotoxy(obstacle[i]);
+				cout<<(char)BV;
+				
+			}
+			
+			
+			
+			gotoxy(1, 20);
+			cout<<(char)204;
+			gotoxy(100, 20);
+			cout<<(char)185;
+			gotoxy(50,1);
+			cout<<(char)203;
+			gotoxy(50,40);
+			cout<<(char)202;
+			
+			
+		}
+		
+		
+		
+		
 	}
 	
 	
 	
 //////////////////////////////////////Levels///////////////////////////////////////////////////////////
 	
+
 	
-	int level_1(){
+	int makeLevel(int nLevel, int _snakeColor, int _foodColor, int _borderColor, int _snakeTailColor, int _scoreCap, int obstacleType, COORD startPosition){
 		
-		snakeColor = 168;//168 by default
+		
+		
+		
+		snakeColor = _snakeColor;
 		backgroundColor = 14;
-		foodColor = 70;
-		borderColor = 2;
-		snakeTailColor = 14;
+		foodColor = _foodColor;
+		borderColor = _borderColor;
+		snakeTailColor = _snakeTailColor;
 		
-		
-		
+
 		
 		system("cls");
+		
 		setMapColor(snakeTailColor);
-		int levelScoreCap = 10000;
+		int levelScoreCap = _scoreCap;
 		char direction = r;
 		char auxDirection = direction;
-		int speed = 90;
+		int speed = 80;
 		int initialSize = 4;
 		int scoreLostPerloop = 1;
 		int score ;
 		int foodTimer = 500;
 		int eatenFood = 0;
 		snakeBody.resize(0);
-		snakeBody.push_back({50,20});
+		snakeBody.push_back(startPosition);
 		snakeBody.resize(initialSize,{0,0});
 		drawMap();
 		spawnFood();
 		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), backgroundColor);
 		gotoxy(_width +5 , _height-1);
-		cout<<"Csnake   Level: 1   Eaten Food: "<<eatenFood;
+		cout<<"Csnake   Level: "<<nLevel<<"   Eaten Food: "<<eatenFood;
 		gotoxy(width -15 , _height-1);
 		cout<<"Score: 0 ";
+		
+		putObstacle(obstacleType);
 		
 		while(direction != 27){
 			if(scoreLostPerloop < 100){
@@ -374,7 +533,7 @@ bool ateFood(){
 				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), backgroundColor);
 				cout<<"Score: "<<score;
 				gotoxy(_width +5 , _height-1);
-				cout<<"Csnake   Level: 1   Eaten Food: "<<eatenFood;
+				cout<<"Csnake   Level: "<<nLevel<<"   Eaten Food: "<<eatenFood;
 				scoreLostPerloop = 1;
 				
 				if (score >= levelScoreCap){
@@ -399,103 +558,9 @@ bool ateFood(){
 		
 		return 1;
 	}
+		
+		
+		
+		
 
-		
-		
-		int level_2(){
 			
-			
-			snakeColor = 190;
-			backgroundColor = 14;
-			foodColor = 90;
-			borderColor = 9;
-			snakeTailColor = 14;
-			
-			system("cls");
-			setMapColor(snakeTailColor);
-			int levelScoreCap = 13000;
-			char direction = r;
-			char auxDirection = direction;
-			int speed = 80;
-			int initialSize = 4;
-			int scoreLostPerloop = 1;
-			int score ;
-			int foodTimer = 500;
-			int eatenFood = 0;
-			snakeBody.resize(0);
-			snakeBody.push_back({50,20});
-			snakeBody.resize(initialSize,{0,0});
-			drawMap();
-			spawnFood();
-			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), backgroundColor);
-			gotoxy(_width +5 , _height-1);
-			cout<<"Csnake   Level: 2   Eaten Food: "<<eatenFood;
-			gotoxy(width -15 , _height-1);
-			cout<<"Score: 0 ";
-			
-			while(direction != 27){
-				if(scoreLostPerloop < 100){
-					scoreLostPerloop++;
-				}
-				
-				if(kbhit()){
-					getch();//corrige un bug
-					direction = getch();
-				}
-				
-				if(direction == u || direction == d || direction == l ||direction == r){
-					moveSnake(direction);
-					auxDirection = direction;
-				}
-				else{
-					moveSnake(auxDirection);
-				}
-				
-				
-				if(checkColition()){
-					return 0;
-				}
-				
-				
-				if(ateFood()){
-					foodTimer = 500;
-					eatenFood++;
-					spawnFood();
-					grow(2);
-					speed--;
-					score = ((snakeBody.size()-initialSize) * 100)-scoreLostPerloop;
-					gotoxy(width-15 , _height-1);
-					SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), backgroundColor);
-					cout<<"Score: "<<score;
-					gotoxy(_width +5 , _height-1);
-					cout<<"Csnake   Level: 2   Eaten Food: "<<eatenFood;
-					scoreLostPerloop = 1;
-					
-					if (score >= levelScoreCap){
-						return 1;
-					}
-					
-				}
-				
-				if(foodTimer == 0){
-					foodTimer = 500;
-					gotoxy(foodCoord);
-					SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), backgroundColor);
-					cout<<snakeSegment;
-					spawnFood();
-				}
-				foodTimer--;
-				Sleep(speed);
-			}
-			
-			
-			
-			
-			return 1;
-		}
-			
-			
-			
-			
-			
-				

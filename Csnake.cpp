@@ -17,7 +17,7 @@ int main(int argc, char *argv[]) {
 	HWND hWnd = GetConsoleWindow();
 	ShowWindow(hWnd,SW_SHOWMAXIMIZED);
 	
-	MakeMenu mainMenu = MakeMenu(width, height, {"Nuevo Juego", "Continuar", "Salir"});
+	MakeMenu mainMenu = MakeMenu(width, height, {"Nuevo Juego", "Continuar", "Creditos", "Salir"});
 	mainMenu.title = "Csnake";
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), backgroundColor);
 	int opc;
@@ -33,7 +33,19 @@ int main(int argc, char *argv[]) {
 		}else if(opc == 2){
 			playLevel(LEVEL);
 			
-		}else if(opc == 3){
+		}else if (opc ==3){
+			gotoxy(((_width + width)/2)-4 , (_height + height)/2);
+			cout<<"Creado por Francisco Rodriguez";
+			gotoxy(((_width + width)/2)-4 , (_height + height +2)/2);
+			cout<<"Practicas c++";
+			gotoxy(((_width + width)/2)-4 , (_height + height +4)/2);
+			cout<<"2021";
+			gotoxy(((_width + width)/2)-4 , (_height + height +12)/2);
+			cout<<"Presione una tecla para continuar...";
+			getch();
+			
+			
+		}else if(opc == 4){
 			
 			gotoxy(((_width + width)/2)-4 , (_height + height)/2);
 			cout<<"Hasta luego...";
@@ -66,7 +78,7 @@ void playLevel(int level){
 		break;
 		
 		case 1:
-			if (level_1()){
+			if (makeLevel(1, 168, 70, 2, 14, 1000, 0, {20,10})){
 				LEVEL = 2;
 			}
 			else{
@@ -74,7 +86,7 @@ void playLevel(int level){
 			}
 		break;
 		case 2:
-			if (level_2()){
+			if (makeLevel(2, 190, 90, 9, 14, 1100, 1, {50,20})){
 				LEVEL = 3;
 			}
 			else{
@@ -82,11 +94,22 @@ void playLevel(int level){
 			}
 		break;
 		case 3:
+			if (makeLevel(3, 114, 206, 7, 70, 2000, 2, {50,20})){
+				LEVEL = 4;
+			}
+			else{
+				GAME_OVER = true;
+			}
+			
+			
+		break;
+	
+		default:{
 			gotoxy(((_width + width)/2)-4 , (_height + height)/2);
-			cout<<"Level 3, comming soon";
+			cout<<"Level "<<level<<", comming soon";
 			GAME_OVER = true;
 			Sleep(3000);
-		break;
+		};
 		
 	}//
 	
@@ -96,7 +119,6 @@ void playLevel(int level){
 	else{
 		gotoxy(((_width + width)/2)-4 , (_height + height)/2);
 		cout<<"GAME OVER";
-		GAME_OVER = true;
 		Sleep(3000);
 	}
 	
